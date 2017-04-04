@@ -23,18 +23,18 @@ Called by preprocess_single_subject.m Performs processing steps specified in spe
 	
 Uses the following files (which you should not have to modify): 
 
-	- template_slice_time_job_spm12.mat
-	- template_realign_job_spm12.mat
+	- template_slice_time_job_spm12.mat - blank matlabbatch for slice time correction
+	- template_realign_job_spm12.mat - blank matlabbatch for realignment
 	- fmri_plot_diff.m - plots 1-back and 2-back differences of 6 rigid body realignment parameters
 	- QC_spm_check_reg.m - prints images of 1st & middle volume to check subject registration to MNI EPI & T1 template
-	- template_smooth_job_spm12.mat
+	- template_smooth_job_spm12.mat - blank matlabbatch for spatial smoothing
 	- fmri_estimate_nuisance.m
 	- fmri_regress_nuisance.m
-	- brain_mask.nii
+	- brain_mask.nii - MNI brain mask
 	- fmri_time_filt.m
 	
 ## fmri_preprocess_specs_par2ica_spm12.m - Example specs_file. 
-Sets flags required by fmri_preprocess_spm12 to perform the following processing steps:
+Sets flags required by fmri_preprocess_spm12.m to perform the following processing steps:
 
 	- parrec2nii: Convert par/rec to nifti using dcm2niix
 	- slice_time_correct: Also sets slice_order to ascending
