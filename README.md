@@ -28,6 +28,8 @@ Uses the following files (which you should not have to modify):
 	- fmri_plot_diff.m - plots 1-back and 2-back differences of 6 rigid body realignment parameters
 	- QC_spm_check_reg.m - prints images of 1st & middle volume to check subject registration to MNI EPI & T1 template
 	- template_smooth_job_spm12.mat
+	- fmri_estimate_nuisance.m
+	- fmri_regress_nuisance.m
 	
 ## fmri_preprocess_specs_par2ica_spm12.m - Example specs_file. 
 Sets flags required by fmri_preprocess_spm12 to perform the following processing steps:
