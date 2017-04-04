@@ -11,7 +11,7 @@ Makes a copy of raw data, initializes preferences for processing single subject 
 	- procdir: directory where raw data will be copied and processed; function creates ID folder within procdir if it does not already exist
 	- tooldir: directory where processing scripts are located; default assumes fmri_preproc_toolbox exists within present working directory
 	- rename_task: e.g., task-rest_bold or task-GNG_bold; script will copy & rename func_files to procdir/ID using the following convention
-		sub-ID/sess_name/run-?/sub-ID_sess_name_rename_task_run-?, where run number is determined by the order of func_files
+		sub-ID/sess_name/run-??/sub-ID_sess_name_rename_task_run-??, where run number is determined by the order of func_files
 	- specs_file: path/file.m containing processing preferences; default: pwd/fmri_preprocess_par2ica_spm12.m
 	
 ## fmri_preprocess_spm12.m - Main function 2. 
