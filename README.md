@@ -30,6 +30,7 @@ Uses the following files (which you should not have to modify):
 	- template_smooth_job_spm12.mat
 	- fmri_estimate_nuisance.m
 	- fmri_regress_nuisance.m
+	- brain_mask.nii
 	
 ## fmri_preprocess_specs_par2ica_spm12.m - Example specs_file. 
 Sets flags required by fmri_preprocess_spm12 to perform the following processing steps:
@@ -43,7 +44,7 @@ Sets flags required by fmri_preprocess_spm12 to perform the following processing
 	- ica_smooth: Use 6-mm FWHM kernel 
 	
 ## batch_preprocess_list.m
-Probably not very helpful for people outside of CNIR. Finds raw data for each subject specified in slist.txt and defines inputs required for preprocess_single_subject.m
+Probably not very helpful for people outside of CNIR. Finds raw data for each subject specified in slist.txt and defines inputs required for preprocess_single_subject.m. Uses slist.txt.
 	
 
 
