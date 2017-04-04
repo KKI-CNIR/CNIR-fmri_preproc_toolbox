@@ -31,6 +31,7 @@ Uses the following files (which you should not have to modify):
 	- fmri_estimate_nuisance.m
 	- fmri_regress_nuisance.m
 	- brain_mask.nii
+	- fmri_time_filt.m
 	
 ## fmri_preprocess_specs_par2ica_spm12.m - Example specs_file. 
 Sets flags required by fmri_preprocess_spm12 to perform the following processing steps:
