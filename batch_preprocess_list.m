@@ -27,7 +27,7 @@ end
 
 slist = fullfile(tooldir, 'subjects2process.txt');
 istart = 3;
-iend = 9;
+iend = 4;
 task = '*RestState*';
 rename_task = 'task-rest_bold';
 specs_file = 'fmri_preprocess_specs_par2cluster_spm12.m';
@@ -50,7 +50,7 @@ end
 cwd = pwd;
 
 %keep track of IDs in list missing data
-fid = fopen(fullfile(cwd, 'ID_DOS_missing_parrec.txt'), 'w');
+fid2 = fopen(fullfile(cwd, 'ID_DOS_missing_parrec.txt'), 'w');
 
 %loop over subjects in slist; figure out what raw files to use for each ID
 for isub = istart:iend
@@ -148,11 +148,10 @@ for isub = istart:iend
         
     else %no task.rec from DOS; needs to be copied from godzilla
         warning(strcat('Missing ', task,' .rec from ', DOS))
-        fprintf(fid, '%s %s\n', rawSM, DOS);
+        fprintf(fid2, '%s %s\n', rawSM, DOS);
         continue
     end
     
-    fclose(fid);
-    
 end
 
+fclose(fid2);
