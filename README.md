@@ -23,11 +23,11 @@ Called by preprocess_single_subject.m Performs processing steps specified in spe
 	
 Uses the following files (which you should not have to modify): 
 
-	- template_slice_time_job_spm12.mat - blank matlabbatch for slice time correction
-	- template_realign_job_spm12.mat - blank matlabbatch for realignment
+	- template_slice_time_job_spm12.mat - template matlabbatch for slice time correction
+	- template_realign_job_spm12.mat - template matlabbatch for realignment
 	- fmri_plot_diff.m - plots 1-back and 2-back differences of 6 rigid body realignment parameters
 	- QC_spm_check_reg.m - prints images of 1st & middle volume to check subject registration to MNI EPI & T1 template
-	- template_smooth_job_spm12.mat - blank matlabbatch for spatial smoothing
+	- template_smooth_job_spm12.mat - template matlabbatch for spatial smoothing
 	- fmri_estimate_nuisance.m
 	- fmri_regress_nuisance.m
 	- brain_mask.nii - MNI brain mask
@@ -45,7 +45,7 @@ Sets flags required by fmri_preprocess_spm12.m to perform the following processi
 	- ica_smooth: Use 6-mm FWHM kernel 
 	
 ## batch_preprocess_list.m
-Probably not very helpful for people outside of CNIR. Finds raw data for each subject specified in slist.txt and defines inputs required for preprocess_single_subject.m. Uses slist.txt.
+Probably not very helpful for people outside of CNIR. Finds raw data for each subject specified in slist.txt and defines inputs required for preprocess_single_subject.m. Uses subjects2process.txt.
 	
 
 
