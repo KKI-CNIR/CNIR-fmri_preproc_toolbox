@@ -28,14 +28,16 @@ old_path= pwd;
 dat = load(rp_file);
 
 for order = 1:2
+    clear it jt IC C vals itrans irot iro jro
     if (order == 0)
         diff_dat = dat;
     else
         diff_dat = diff(dat, order, 1);
     end
-    [itrans, jtrans] = find(diff_dat(:, 1:3)>thresh);   
-    vals = diff_dat(diff_dat(:, 1:3)>thresh);
-    [C, IA, IC] = unique(itrans);
+    [itrans] = find(diff_dat(:, 1:3)>thresh);   
+    [it, jt] = ind2sub(size(diff_dat), itrans);
+    [C, IA, ~] = unique(it);
+    vals = diff_dat(sub2ind(size(diff_dat), it(IA), jt(IA)));
     
     fig = figure('Visible', 'off');
     subplot(2, 1, 1)
@@ -44,7 +46,7 @@ for order = 1:2
     hold on
     plot(diff_dat(:,2),'G')
     plot(diff_dat(:,3),'B')
-    text(C, vals(IC), num2str(C), 'HorizontalAlignment', 'center')
+    text(C, vals, num2str(C), 'HorizontalAlignment', 'center')
     hold off
     grid on
     xlabel('scans')
@@ -52,16 +54,18 @@ for order = 1:2
     title(strcat(['Order ', num2str(order)], ' Difference in Translational Motion for run', num2str(run)));
 %     legend('X', 'Y', 'Z')
     
-    clear vals C IA IC
-    [irot, jrot] = find(diff_dat(:, 4:6)*180/pi>thresh);   
-    vals = diff_dat(diff_dat(:, 4:6)*180/pi>thresh);
-    [C, IA, IC] = unique(irot);
+    clear IC C vals 
+    [irot] = find(diff_dat(:, 4:6)*180/pi>thresh);   
+    [iro, jro] = ind2sub(size(diff_dat), irot);
+    [C, IA, ~] = unique(iro);
+    vals = diff_dat(sub2ind(size(diff_dat), iro(IA), jro(IA)));
+
     subplot(2, 1, 2)
     plot(diff_dat(:, 4)*180/pi,'R');
     hold on
     plot(diff_dat(:,5)*180/pi,'G');
     plot(diff_dat(:,6)*180/pi,'B');
-    text(C, vals(IC), num2str(C), 'HorizontalAlignment', 'center')
+    text(C, vals, num2str(C), 'HorizontalAlignment', 'center')
     hold off
     grid on
     xlabel('scans');
