@@ -26,8 +26,8 @@ end
 %specs_file: path/file.m containing processing preferences
 
 slist = fullfile(tooldir, 'subjects2process.txt');
-istart = 3;
-iend = 4;
+istart = 50;
+% iend = 4;
 task = '*RestState*';
 rename_task = 'task-rest_bold';
 specs_file = 'fmri_preprocess_specs_par2cluster_spm12.m';
@@ -44,7 +44,7 @@ fclose(fid);
 SMs = strtrim(subjects{1});
 
 if(~exist('iend', 'var'))
-iend = length(SMs);
+    iend = length(SMs);
 end
 
 cwd = pwd;
@@ -118,7 +118,8 @@ for isub = istart:iend
     DOS = strcat('ses-', matchStr{3}, num2str(str2num(matchStr{1}), '%02d'), num2str(str2num(matchStr{2}), '%02d'));
     
     %get list of .rec files in task folder that match the task name
-    freclist = dir(fullfile(fSource, fdate, taskfold, strcat(rawSM, '*.rec')));
+    %     freclist = dir(fullfile(fSource, fdate, taskfold, strcat(rawSM, '*.rec')));
+    freclist = dir(fullfile(fSource, fdate, taskfold, '*.rec'));
     %# of functional runs
     nruns = length(freclist);
     fprintf('Found %s run(s) matching %s\n', num2str(nruns), task)
