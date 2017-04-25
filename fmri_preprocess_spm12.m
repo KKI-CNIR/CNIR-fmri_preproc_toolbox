@@ -2,7 +2,7 @@ function fmri_preprocess_spm12(setup_file)
 
 %Function to preprocess a single subject with multiple fmri runs.
 %The steps and specifications for what is to be done is from the set-up
-%file (created from fmri_preprocess_specs_par_spm12.m & batch_preprocess.m)
+%file (created from preprocess_single_subject.m)
 
 %Suresh E Joel Dec 22, 2010, Modified Mar 2, 2011
 %MB Nebel modified Jan 17, 2012: added flag to compile motion parameters
@@ -31,7 +31,8 @@ end
 %% PAR/REC to NIFTI using r2agui
 if(parrec2nii)
     
-    %%have not updated anatomical conversion to use dcm2nii
+    %%have not updated anatomical conversion to use dcm2nii because we
+    %%stopped using MPRAGE for spatial normalization
     if(~skipanat)
         % supply Raw folder
         % rec_convert needs an output folder for Anatomical
@@ -500,7 +501,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
             
         end
         prefix_loop=[npref,prefix_loop];
-        clear curr_func_files func_dir func_file nuisance_file;
+        clear curr_func_files vs nuisance_file;
     end; %if nuisance_regress
     
     %% Smooth the residuals
@@ -520,7 +521,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
         save(fullfile(fileparts(fileparts(func_files{1}{1})),'08_smooth_residuals_job.mat'), 'matlabbatch');
         spm_jobman('run', matlabbatch);
         prefix_loop=['s',prefix_loop];
-        clear curr_func_files func_dir func_file;
+        clear curr_func_files vs;
     end;
     
     %% Time domain filtering
@@ -532,7 +533,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
         fmri_time_filt(curr_func_files,tr,bp,3,brain_mask_file,low_ram);
         disp('BP')
         prefix_loop=['f',prefix_loop];
-        clear curr_func_files func_dir func_file
+        clear curr_func_files vs
     end;
     
 end;
