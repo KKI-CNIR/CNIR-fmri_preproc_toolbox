@@ -322,7 +322,7 @@ elseif(normalize==2) %estimate and write using SPM's EPI template
             frames{iframe}=strcat(vs(iframe).fname, ',', num2str(iframe));
         end;
         
-        %use geometric middle volume to estimate normalization parameters
+        %use middle volume to estimate normalization parameters;
         matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.source = {strcat(vs(ceil(length(vs)/2)).fname, ',', num2str(ceil(length(vs)/2)))};
         matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.wtsrc = '';
         matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.resample = frames';
@@ -425,7 +425,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
     
     %% Estimate nuisances
     if(nuisance_estimate)
-        [~, func_file, fext] = fileparts(func_files{ir}{1});
+        [~, func_file, fext] = fileparts(func_files{irun}{1});
         
         %get list of volumes from which nuisances will be estimated and
         %removed
