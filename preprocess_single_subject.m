@@ -1,4 +1,4 @@
-function [ ] = preprocess_single_subject(ID, func_files, sess_names, procdir, tooldir, rename_task, specs_file)
+function [ ] = preprocess_single_subject(ID, func_files, sess_names, procdir, tooldir, rename_task, specs_file, prefixes)
 %Inputs
 %   ID: subject identification number padded with zeros to ensure equal length in format sub-ID
 %   func_files: cell array of path/filename(s) for each raw run to be processed
@@ -43,6 +43,10 @@ if(~exist('specs_file', 'var'))
     specs_file = 'fmri_preprocess_specs_par2ica_spm12.m';
 end
 
+if(~exist('prefixes', 'var'))
+    prefixes = cell(nruns, 1);
+end
+
 cwd = pwd;
 
 addpath(tooldir)
@@ -58,7 +62,6 @@ if(~exist(sub_path, 'dir'))
 end
 
 func_dir = cell(nruns, 1);
-prefixes = cell(nruns, 1);
 sess_dir = fullfile(procdir, ID, sess_names{1}{1});
 
 %% Make a copy of raw data first
@@ -83,7 +86,7 @@ for irun = 1:nruns
         nii_names{irun} = strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii');
         
     else
-        func_files{irun}{1} = fullfile(func_dir{irun}, strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii'));
+        func_files{irun}{1} = fullfile(func_dir{irun}, strcat(prefixes{irun}, ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii'));
         [success, message, ~] = copyfile(fullfile(fSource, strcat(sourceName, '.nii')), func_files{irun}{1});
     end %if .rec
     

@@ -12,7 +12,6 @@ function fmri_preprocess_spm12(setup_file)
 %to avoid NIFTI_PAIR format; no longer cd to Template directory
 
 %% Initializing
-clear rp_file;
 if(isunix)
     load(setup_file);
 else
@@ -440,9 +439,9 @@ for irun=1:length(func_files) %The following needs to be done session by session
         % Find realignment parameter file
         if(~motion_correct) %rp_file variable not defined if started script after motion correction
             if(~exist('rp_file', 'var')) %might have defined rp file in batch
-                rp_file_nm = dir(fullfile(fileparts(curr_func_files{1}),'rp*.txt'));
+                rplist = dir(fullfile(fileparts(curr_func_files{1}),'rp*.txt'));
                 rpf = {rplist.name};
-                if(length(rp_file_nm)>1)
+                if(length(rpf)>1)
                     warning('Multiple rp files') %sometimes rerun rigid body realignment after removing high motion volumes
                     disp(rpf)
                     which_file = input('Which rp file?');
@@ -450,7 +449,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
                 else
                     rp_file_nm = rpf{1};
                 end %length>1
-                rp_file{ir} = fullfile(fileparts(curr_func_files{1}), rp_file_nm);
+                rp_file{irun} = fullfile(fileparts(curr_func_files{1}), rp_file_nm);
             end %~exist rp_file
         end %~motion_correct
         
@@ -480,7 +479,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
         if ~exist('npref','var')
             npref = 'n';
         end
-        fmri_extract_nuisance(curr_func_files, tr, rp_file{ir}, wm_file, csf_file, brain_mask_file, nr_options, nuisance_file);
+        fmri_extract_nuisance(curr_func_files, tr, rp_file{irun}, wm_file, csf_file, brain_mask_file, nr_options, nuisance_file);
         
     end %if nuisance_estimate
     
@@ -538,7 +537,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
     
 end;
 
-if(slice_time_correct || motion_correct || normalize || check_normalize)
+if(slice_time_correct || motion_correct || normalize)
     % Make QC File a pdf
     if(~ispc && ~ismac)
         system(sprintf('ps2pdfwr "%s" "%s"', QC_File, ...
