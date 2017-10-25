@@ -67,7 +67,7 @@ if(parrec2nii)
     %use dcm2niix to convert functional par/rec to .nii
     for ir=1:length(func_files)
         [~,~,e]=fileparts(func_files{ir}{1});
-        if(strcmp(e,'.rec'))
+        if(strcmp(e,'.rec') || strcmp(e, '.dcm'))
             %use dcm2nii to convert par/rec to .nii
             convert_str = sprintf('%s %s', fullfile(dcm2nii_toolbox, 'dcm2niix'), func_files{ir}{1});
             [status, result] = system(convert_str);
@@ -174,7 +174,7 @@ if(slice_time_correct)
     spm_jobman('run', matlabbatch);
     prefix = strcat(prefix, matlabbatch{1}.spm.temporal.st.prefix);
     clear matlabbatch vs frames;
-end;
+end
 
 %% Realignment
 if(motion_correct)
@@ -186,11 +186,15 @@ if(motion_correct)
         [~,fname,~]=fileparts(vs(1).fname);
         for iframe=1:length(vs) %Each dynamic
             frames{iframe} = strcat(vs(iframe).fname, ',', num2str(iframe));
-        end;
-        matlabbatch{1}.spm.spatial.realign.estimate.data{irun} = frames';
+        end
+        if(size(frames, 2) > size(frames, 1))
+            matlabbatch{1}.spm.spatial.realign.estimate.data{irun} = frames';
+        else
+            matlabbatch{1}.spm.spatial.realign.estimate.data{irun} = frames;
+        end
         %         matlabbatch{1}.spm.spatial.realign.estimate.data{ir} = matlabbatch{1}.spm.spatial.realign.estimate.data{ir}';
         rp_file{irun}=fullfile(func_dir{irun}, strcat('rp_', fname,'.txt'));%If nuisance remove is selected
-    end;
+    end
     save(fullfile(fileparts(func_dir{irun}),'02_realign_job.mat'),'matlabbatch');
     
     disp(matlabbatch{1}.spm.spatial.realign.estimate.data{1}{1});
@@ -198,8 +202,8 @@ if(motion_correct)
     clear matlabbatch;
     for irun=1:length(func_files) % Each run
         fmri_plot_diff(QC_File, rp_file{irun}, motion_thresh, irun);
-    end;
-end;
+    end
+end
 
 %%Unbiased Anatomical
 if(unbiased)
@@ -263,7 +267,7 @@ if(segment_anat)
     clear matlabbatch;
     imgs = [{fullfile(anat_dir, ['wc1',anat_file_nodir,ext])}, {wm_file}, {csf_file}];
     fmri_spm_check_reg(imgs, '-dpsc2', QC_File, '-append');
-end;
+end
 
 
 %% Spatial normalization
@@ -324,7 +328,13 @@ elseif(normalize==2) %estimate and write using SPM's EPI template
         %use middle volume to estimate normalization parameters;
         matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.source = {strcat(vs(ceil(length(vs)/2)).fname, ',', num2str(ceil(length(vs)/2)))};
         matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.wtsrc = '';
-        matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.resample = frames';
+        
+        if(size(frames, 2) > size(frames, 1))
+            matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.resample = frames';
+        else
+            matlabbatch{1}.spm.tools.oldnorm.estwrite.subj.resample = frames;
+        end
+        
         matlabbatch{1}.spm.tools.oldnorm.estwrite.eoptions.template = {fullfile(normPath, 'EPI.nii,1')};
         matlabbatch{1}.spm.tools.oldnorm.estwrite.eoptions.weight = '';
         matlabbatch{1}.spm.tools.oldnorm.estwrite.eoptions.smosrc = 8;
@@ -388,7 +398,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
             band = 5;
             drop_band = 1;
         end
-        disp('HP/Linear Detrend')
+        disp(['HP/Linear Detrend; band = ', num2str(band)])
         fmri_time_filt(curr_func_files, tr, hp_filter, band, brain_mask_file, low_ram);
         if (drop_band), clear band, end
         prefix_loop = strcat('f', prefix_loop);
@@ -409,10 +419,10 @@ for irun=1:length(func_files) %The following needs to be done session by session
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             ica_smooth_fwhm=round(abs(vs(1).mat(1,1).*2));
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        end;
+        end
         if(length(ica_smooth_fwhm)==1)
             ica_smooth_fwhm=repmat(ica_smooth_fwhm,1,3);
-        end;
+        end
         matlabbatch{1}.spm.spatial.smooth.fwhm = ica_smooth_fwhm;
         matlabbatch{1}.spm.spatial.smooth.dtype = 0;
         matlabbatch{1}.spm.spatial.smooth.data=curr_func_files';
@@ -513,7 +523,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
         if(smooth_fwhm==-1), smooth_fwhm=round(abs(vs.mat(1,1).*2)); end;
         if(length(smooth_fwhm)==1)
             smooth_fwhm=repmat(smooth_fwhm,1,3);
-        end;
+        end
         matlabbatch{1}.spm.spatial.smooth.fwhm = smooth_fwhm;
         matlabbatch{1}.spm.spatial.smooth.dtype = 0;
         matlabbatch{1}.spm.spatial.smooth.data=curr_func_files';
@@ -521,7 +531,7 @@ for irun=1:length(func_files) %The following needs to be done session by session
         spm_jobman('run', matlabbatch);
         prefix_loop=['s',prefix_loop];
         clear curr_func_files vs;
-    end;
+    end
     
     %% Time domain filtering
     if(bp_filter)
@@ -533,9 +543,9 @@ for irun=1:length(func_files) %The following needs to be done session by session
         disp('BP')
         prefix_loop=['f',prefix_loop];
         clear curr_func_files vs
-    end;
+    end
     
-end;
+end
 
 if(slice_time_correct || motion_correct || normalize)
     % Make QC File a pdf

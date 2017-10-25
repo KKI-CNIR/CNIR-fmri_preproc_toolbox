@@ -68,7 +68,7 @@ sess_dir = fullfile(procdir, ID, sess_names{1}{1});
 for irun = 1:nruns
     
     %where to copy raw data before processing it
-    func_dir{irun} = fullfile(procdir, ID, sess_names{irun}{1}, 'func', strcat('run-', num2str(irun, '%02d')));
+    func_dir{irun} = fullfile(sub_path, sess_names{irun}{1}, 'func', strcat('run-', num2str(irun, '%02d')));
     
     %if ftarget doesn't exist, create it
     if(~exist(func_dir{irun}, 'dir'))
@@ -78,12 +78,22 @@ for irun = 1:nruns
     %figure out raw data file type (assumes 4D)
     [fSource, sourceName, sourceExt] = fileparts(func_files{irun}{1});
     
-    if(sourceExt=='.rec')
+    if(strcmp(sourceExt, '.rec'))
         %copy functional par & rec to func_dir
         func_files{irun}{1}=fullfile(func_dir{irun}, strcat(sourceName, '.rec'));
         [success, message, ~] = copyfile(fullfile(fSource, strcat(sourceName, '.rec')), func_files{irun}{1});
-        [success, message, ~] = copyfile(fullfile(fSource, strcat(sourceName, '.par')), fullfile(func_dir{irun}, strcat(sourceName, '.par')));
+        
         nii_names{irun} = strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii');
+        
+    elseif(strcmp(sourceExt, '.dcm'))
+        func_files{irun}{1}=fullfile(func_dir{irun}, strcat(sourceName, '.dcm'));
+        flist = dir(fullfile(fSource, '*.dcm'));
+        frames = {flist.name}';
+        for idcm = 1:length(flist)
+            [success, message, ~] = copyfile(fullfile(fSource, frames{idcm}), func_dir{irun});
+        end
+        nii_names{irun} = strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii');
+
         
     else
         func_files{irun}{1} = fullfile(func_dir{irun}, strcat(prefixes{irun}, ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii'));
@@ -93,6 +103,7 @@ for irun = 1:nruns
 end; %irun
 
 %specify path/name.ps of file to print quality info to
+%how does this work with more than one run?
 QC_File = fullfile(sess_dir, strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_QC.ps'));
 
 %load preferences into matlab memory
