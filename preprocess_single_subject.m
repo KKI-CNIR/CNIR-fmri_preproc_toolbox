@@ -82,6 +82,7 @@ for irun = 1:nruns
         %copy functional par & rec to func_dir
         func_files{irun}{1}=fullfile(func_dir{irun}, strcat(sourceName, '.rec'));
         [success, message, ~] = copyfile(fullfile(fSource, strcat(sourceName, '.rec')), func_files{irun}{1});
+        [success, message, ~] = copyfile(fullfile(fSource, strcat(sourceName, '.par')), strrep(func_files{irun}{1}, '.rec', '.par'));
         
         nii_names{irun} = strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_run-', num2str(irun, '%02d'), '.nii');
         
