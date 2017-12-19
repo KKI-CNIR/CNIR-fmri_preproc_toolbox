@@ -70,6 +70,7 @@ if(parrec2nii)
         if(strcmp(e,'.rec') || strcmp(e, '.dcm'))
             %use dcm2nii to convert par/rec to .nii
             convert_str = sprintf('%s %s', fullfile(dcm2nii_toolbox, 'dcm2niix'), func_files{ir}{1});
+           
             [status, result] = system(convert_str);
             
             %haven't been able to figure out how to specify the
