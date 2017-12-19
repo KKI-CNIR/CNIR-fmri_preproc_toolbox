@@ -7,7 +7,8 @@ prefix = '';
 
 %PAR/REC to nifti convert
 parrec2nii = 1;
-dcm2nii_toolbox = fullfile(cwd, 'dcm2niix', 'bin'); %only used to convert par/rec
+% dcm2nii_toolbox = fullfile(cwd, 'dcm2niix', 'bin'); %only used to convert par/rec
+dcm2nii_toolbox = 'C:\Users\crasta\mricron';
 
 %% Set origin - Setting this will make the program wait for user input!
 %%Set origin of ACPC line to 0
