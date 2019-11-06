@@ -166,7 +166,11 @@ if(slice_time_correct)
         otherwise
             error('Slice order has to be 1 - 7')
     end;
+    if (~exist(ref_slice, 'var'))
     matlabbatch{1}.spm.temporal.st.refslice = round(matlabbatch{1}.spm.temporal.st.nslices/2);
+    else
+        matlabbatch{1}.spm.temporal.st.refslice = ref_slice;
+    end
     save(fullfile(fileparts(func_dir{1}),'01_slice_time_correct_job.mat'),'matlabbatch');
     spm('defaults', 'FMRI');
     
