@@ -1,7 +1,7 @@
 function FD = fmri_FD(rp_file, out_file, radius)
 %Function to calculate Framewise Displacement (FD) (Power et al., 2012)from
 %the six realignment parameters.  FD is calculated by summing the absolute
-%value of the differenced (time t?time t?1) translational realignment
+%value of the differenced (time_t-time_t-1) translational realignment
 %parameters and the three differenced rotational parameters, which are
 %converted from radians to millimeters by assuming a brain radius of 50 mm.
 %
@@ -22,8 +22,10 @@ diff_dat = abs([[0 0 0 0 0 0]; diff(dat, order, 1)]);
 % 	Multiply by 50mm brain;
 diff_dat(:,4:6) = diff_dat(:,4:6) * radius;
 FD = sum(diff_dat, 2);
-save(out_file, 'FD', '-ascii')
 
+if(exist('out_file', 'var'))
+save(out_file, 'FD', '-ascii')
+end
 
 
 
