@@ -24,7 +24,7 @@ diff_dat(:,4:6) = diff_dat(:,4:6) * radius;
 FD = sum(diff_dat, 2);
 
 if(exist('out_file', 'var'))
-save(out_file, 'FD', '-ascii')
+writetable(table(FD), out_file)
 end
 
 
