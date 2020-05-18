@@ -112,11 +112,11 @@ run(specs_file)
 
 %save current matlab workspace
 [~, sname, ~] = fileparts(specs_file);
-setup_file=fullfile(sess_dir, ...
+setup_file=fullfile(sess_dir, 'func',...
     strcat(ID, '_', sess_names{irun}{1}, '_', rename_task, '_', sname, '_', datestr(now,'yyyymmdd'), '.mat'));
 save(setup_file);
 
-cd(sess_dir)
+cd(fullfile(sess_dir, 'func'))
 
 %process data
 fmri_preprocess_spm12(setup_file);
